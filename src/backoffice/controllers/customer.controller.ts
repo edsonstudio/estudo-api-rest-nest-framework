@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { Customer } from "../models/customer.model";
-import { ResultDto } from "src/utils/dtos/result.dto";
+import { ResultDto } from "src/shared/dtos/result.dto";
 
 @Controller('v1/customers')
 export class CustomerController {
