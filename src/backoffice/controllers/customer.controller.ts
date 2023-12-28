@@ -9,6 +9,8 @@ import { CustomerService } from "../services/customer.service";
 import { Customer } from "../models/customer.model";
 import { Address } from "../models/address.model";
 import { CreateAddressContract } from "../contracts/customer/create-address.contract";
+import { CreatePetContract } from "../contracts/customer/create-pet.contract";
+import { Pet } from "../models/pet.model";
 
 @Controller('v1/customers')
 export class CustomerController {
@@ -47,7 +49,7 @@ export class CustomerController {
     async addBillingAddress(@Param('document') document, @Body() model: Address) {
         try {
             await this.customerService.addBillingAddress(document, model);
-            return model;
+            return new ResultDto('Endereço adicionado com sucesso', true, model, null);
         } catch (error) {
             throw new HttpException(new ResultDto('Não foi possível adicionar o seu endereço', false, null, error), HttpStatus.BAD_REQUEST);
         }
@@ -58,9 +60,20 @@ export class CustomerController {
     async addShippingAddress(@Param('document') document, @Body() model: Address) {
         try {
             await this.customerService.addShippingAddress(document, model);
-            return model;
+            return new ResultDto('Endereço adicionado com sucesso', true, model, null);
         } catch (error) {
             throw new HttpException(new ResultDto('Não foi possível adicionar o seu endereço', false, null, error), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Post(':document/pets')
+    @UseInterceptors(new ValidatorInterceptor(new CreatePetContract())) 
+    async createPet(@Param('document') document, @Body() model: Pet) {
+        try {
+            await this.customerService.createPet(document, model);
+            return new ResultDto('Animal adicionado com sucesso', true, model, null);
+        } catch (error) {
+            throw new HttpException(new ResultDto('Não foi possível adicionar o seu animal', false, null, error), HttpStatus.BAD_REQUEST);
         }
     }
 
