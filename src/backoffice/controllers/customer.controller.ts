@@ -5,11 +5,15 @@ import { CreateCustomerContract } from "../contracts/customer.contracts";
 import { CreateCustomerDto } from "../dtos/create-customer.dto";
 import { AccountService } from "../services/account.service";
 import { User } from "../models/user.model";
+import { CustomerService } from "../services/customer.service";
+import { Customer } from "../models/customer.model";
 
 @Controller('v1/customers')
 export class CustomerController {
 
-    constructor(private readonly accountService: AccountService) { }
+    constructor(
+        private readonly accountService: AccountService,
+        private readonly customerService: CustomerService) { }
 
     @Get()
     get() {
@@ -25,7 +29,8 @@ export class CustomerController {
     @UseInterceptors(new ValidatorInterceptor(new CreateCustomerContract()))
     async post(@Body() model: CreateCustomerDto) {
         const user = await this.accountService.create(new User(model.document, model.password, true));
-        return new ResultDto('Cliente criado com sucesso', true, user, null);
+        const customer = await this.customerService.create(new Customer(model.name, model.document, model.email, [], null, null, null, user));
+        return new ResultDto('Cliente criado com sucesso', true, customer, null);
     }
 
     @Put(':document')

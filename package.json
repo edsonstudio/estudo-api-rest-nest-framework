@@ -1,10 +1,10 @@
 {
   "name": "petshop-v2",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "version": "2.0.1",
+  "description": "Versão 2 - Atualizado da v5 para v10 do Nest.js",
+  "author": "Edson Studio",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
