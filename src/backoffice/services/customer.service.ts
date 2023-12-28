@@ -23,4 +23,14 @@ export class CustomerService {
             }
         }, options);
     }
+
+    async addShippingAddress(document: string, data: Address): Promise<Customer> {
+        const options = { upsert: true }; //Serve para caso não exista o endereço no cliente ele nao fique tentando atualizar, mas sim o crie.
+
+        return await this.model.findOneAndUpdate({ document }, {
+            $set: {
+                shippingAddress: data
+            }
+        }, options);
+    }
 }
