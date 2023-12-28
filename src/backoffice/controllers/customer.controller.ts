@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, UseInterceptors } from "@nestjs/common";
 import { ResultDto } from "src/shared/dtos/result.dto";
 import { ValidatorInterceptor } from "src/shared/interceptors/validator.interceptor";
 import { CreateCustomerContract } from "../contracts/customer.contracts";
@@ -28,9 +28,16 @@ export class CustomerController {
     @Post()
     @UseInterceptors(new ValidatorInterceptor(new CreateCustomerContract()))
     async post(@Body() model: CreateCustomerDto) {
-        const user = await this.accountService.create(new User(model.document, model.password, true));
-        const customer = await this.customerService.create(new Customer(model.name, model.document, model.email, [], null, null, null, user));
-        return new ResultDto('Cliente criado com sucesso', true, customer, null);
+
+        try {
+            const user = await this.accountService.create(new User(model.document, model.password, true));
+            const customer = await this.customerService.create(new Customer(model.name, model.document, model.email, [], null, null, null, user));
+            return new ResultDto('Cliente criado com sucesso', true, customer, null);
+        } catch (error) {
+            //TODO: Criar um rollback manual
+            throw new HttpException(new ResultDto('Não foi possível criar o seu cadastro', false, null, error), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @Put(':document')
