@@ -12,12 +12,19 @@ export class CustomerService {
     async findAll(): Promise<Customer[]> {
         // Versão com o ID, ideal para utilizar numa grid onde é necessario repassar o ID para o backend.
         return await this.model.find({}, 'name email document')
-        // .sort('name') // Ordena pelo nome de forma crescente.
-        .sort('-name') // Ordena pelo nome de forma decrescente.
-        .exec(); 
+            // .sort('name') // Ordena pelo nome de forma crescente.
+            .sort('-name') // Ordena pelo nome de forma decrescente.
+            .exec();
 
         // Versão sem o ID.
         // return await this.model.find({}, 'name email document -_id').exec(); 
+    }
+
+    async find(document): Promise<Customer> {
+        return await this.model
+            .findOne({ document })
+            .populate('user', 'username')
+            .exec();
     }
 
     async create(data: Customer): Promise<Customer> {
@@ -47,7 +54,7 @@ export class CustomerService {
 
     async createPet(document: string, data: Pet): Promise<Customer> {
         const options = { upsert: true, new: true };
-        return await this.model.findOneAndUpdate({document},{
+        return await this.model.findOneAndUpdate({ document }, {
             $push: {
                 pets: data
             }
@@ -55,7 +62,7 @@ export class CustomerService {
     }
 
     async updatePet(document: string, id: string, data: Pet): Promise<Customer> {
-        return await this.model.findOneAndUpdate({document, 'pets._id':id}, {
+        return await this.model.findOneAndUpdate({ document, 'pets._id': id }, {
             $set: {
                 'pets.$': data
             }

@@ -24,15 +24,19 @@ export class CustomerController {
         try {
             const customers = await this.customerService.findAll();
             return new ResultDto(null, true, customers, null);
-
         } catch (error) {
             throw new HttpException(new ResultDto('Não foi possível obter os clientes', false, null, error), HttpStatus.BAD_REQUEST);
         }
     }
 
     @Get(':document')
-    getById(@Param('document') document: string) {
-        return new ResultDto(null, true, {}, null);
+    async get(@Param('document') document: string) {
+        try {
+            const customer = await this.customerService.find(document);
+            return new ResultDto(null, true, customer, null);
+        } catch (error) {
+            throw new HttpException(new ResultDto('Não foi possível obter o cliente', false, null, error), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Post()
