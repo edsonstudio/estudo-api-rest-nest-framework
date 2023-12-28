@@ -67,13 +67,24 @@ export class CustomerController {
     }
 
     @Post(':document/pets')
-    @UseInterceptors(new ValidatorInterceptor(new CreatePetContract())) 
+    @UseInterceptors(new ValidatorInterceptor(new CreatePetContract()))
     async createPet(@Param('document') document, @Body() model: Pet) {
         try {
             await this.customerService.createPet(document, model);
             return new ResultDto('Animal adicionado com sucesso', true, model, null);
         } catch (error) {
             throw new HttpException(new ResultDto('Não foi possível adicionar o seu animal', false, null, error), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Put(':document/pets/:id')
+    @UseInterceptors(new ValidatorInterceptor(new CreatePetContract()))
+    async updatePet(@Param('document') document, @Param('id') id, @Body() model: Pet) {
+        try {
+            await this.customerService.updatePet(document, id, model);
+            return new ResultDto('Animal atualizado com sucesso', true, model, null);
+        } catch (error) {
+            throw new HttpException(new ResultDto('Não foi possível atualizar este animal', false, null, error), HttpStatus.BAD_REQUEST);
         }
     }
 
