@@ -20,8 +20,14 @@ export class CustomerController {
         private readonly customerService: CustomerService) { }
 
     @Get()
-    get() {
-        return new ResultDto(null, true, [], null);
+    async getAll() {
+        try {
+            const customers = await this.customerService.findAll();
+            return new ResultDto(null, true, customers, null);
+
+        } catch (error) {
+            throw new HttpException(new ResultDto('Não foi possível obter os clientes', false, null, error), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Get(':document')

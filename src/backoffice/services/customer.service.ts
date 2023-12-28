@@ -9,14 +9,24 @@ import { Pet } from "../models/pet.model";
 export class CustomerService {
     constructor(@InjectModel('Customer') private readonly model: Model<Customer>) { }
 
-    //Para criar um novo cliente
+    async findAll(): Promise<Customer[]> {
+        // Versão com o ID, ideal para utilizar numa grid onde é necessario repassar o ID para o backend.
+        return await this.model.find({}, 'name email document')
+        // .sort('name') // Ordena pelo nome de forma crescente.
+        .sort('-name') // Ordena pelo nome de forma decrescente.
+        .exec(); 
+
+        // Versão sem o ID.
+        // return await this.model.find({}, 'name email document -_id').exec(); 
+    }
+
     async create(data: Customer): Promise<Customer> {
         const customer = new this.model(data);
         return await customer.save();
     }
 
     async addBillingAddress(document: string, data: Address): Promise<Customer> {
-        const options = { upsert: true }; //Serve para caso não exista o endereço no cliente ele nao fique tentando atualizar, mas sim o crie.
+        const options = { upsert: true }; // Serve para caso não exista o endereço no cliente ele nao fique tentando atualizar, mas sim o crie.
 
         return await this.model.findOneAndUpdate({ document }, {
             $set: {
@@ -26,7 +36,7 @@ export class CustomerService {
     }
 
     async addShippingAddress(document: string, data: Address): Promise<Customer> {
-        const options = { upsert: true }; //Serve para caso não exista o endereço no cliente ele nao fique tentando atualizar, mas sim o crie.
+        const options = { upsert: true }; // Serve para caso não exista o endereço no cliente ele nao fique tentando atualizar, mas sim o crie.
 
         return await this.model.findOneAndUpdate({ document }, {
             $set: {
