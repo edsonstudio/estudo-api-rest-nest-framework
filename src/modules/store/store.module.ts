@@ -1,20 +1,26 @@
 import { Module } from '@nestjs/common';
-import { ProductService } from './services/product.service';
+
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Product } from './entities/product.entity';
+
+import { OrderItemService } from './services/order-item.service';
+import { OrderService } from './services/order.service';
+import { ProductService } from './services/product.service';
+
+import { OrderController } from './controllers/order.controller';
 import { ProductController } from './controllers/product.controller';
+
 import { OrderItem } from './entities/order-item.entity';
 import { Order } from './entities/order.entity';
-import { OrderService } from './services/order.service';
-import { OrderItemService } from './services/order-item.service';
+import { Product } from './entities/product.entity';
 
 @Module({
     imports: [TypeOrmModule.forFeature([ // Para resolver as injeções de dependencias no Repository do TypeOrm
-        Product,
         Order,
-        OrderItem
+        OrderItem,
+        Product
     ])],
     controllers: [
+        OrderController,
         ProductController
     ],
     providers: [
@@ -23,4 +29,4 @@ import { OrderItemService } from './services/order-item.service';
         ProductService
     ]
 })
-export class StoreModule {}
+export class StoreModule { }

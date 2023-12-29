@@ -5,10 +5,14 @@ import { Repository } from "typeorm";
 
 @Injectable()
 export class ProductService {
-    constructor(@InjectRepository(Product) private readonly repository: Repository<Product>){}
+    constructor(@InjectRepository(Product) private readonly repository: Repository<Product>) { }
 
     async get(): Promise<Product[]> {
         return await this.repository.find();
+    }
+
+    async getById(id: number): Promise<Product> {
+        return await this.repository.findOneBy({ id: id });
     }
 
     async post(product: Product) {
