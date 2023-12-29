@@ -11,6 +11,7 @@ import { Address } from "../models/address.model";
 import { CreateAddressContract } from "../contracts/customer/create-address.contract";
 import { CreatePetContract } from "../contracts/customer/create-pet.contract";
 import { Pet } from "../models/pet.model";
+import { QueryDto } from "../dtos/query.dto";
 
 @Controller('v1/customers')
 export class CustomerController {
@@ -34,6 +35,16 @@ export class CustomerController {
         try {
             const customer = await this.customerService.find(document);
             return new ResultDto(null, true, customer, null);
+        } catch (error) {
+            throw new HttpException(new ResultDto('Não foi possível obter o cliente', false, null, error), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Post('query') // Validar se este é mesmo o unico modo de fazer um "GET" com parametros em uma DTO, pois no .NET existe outra forma.
+    async query(@Body() model: QueryDto) {
+        try {
+            const customers = await this.customerService.query(model);
+            return new ResultDto(null, true, customers, null);
         } catch (error) {
             throw new HttpException(new ResultDto('Não foi possível obter o cliente', false, null, error), HttpStatus.BAD_REQUEST);
         }

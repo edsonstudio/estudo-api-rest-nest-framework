@@ -4,6 +4,7 @@ import { Model } from "mongoose";
 import { Customer } from "../models/customer.model";
 import { Address } from "../models/address.model";
 import { Pet } from "../models/pet.model";
+import { QueryDto } from "../dtos/query.dto";
 
 @Injectable()
 export class CustomerService {
@@ -24,6 +25,18 @@ export class CustomerService {
         return await this.model
             .findOne({ document })
             .populate('user', 'username')
+            .exec();
+    }
+
+    // Exemplo com paginação
+    async query(model: QueryDto): Promise<Customer[]> {
+        return await this.model
+            .find(model.query, model.fields,
+                {
+                    skip: model.skip,
+                    limit: model.take
+                })
+            .sort(model.sort)
             .exec();
     }
 
