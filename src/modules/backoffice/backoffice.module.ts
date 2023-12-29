@@ -1,10 +1,17 @@
 import { Module } from '@nestjs/common';
-import { CustomerController } from './controllers/customer.controller';
-import { AccountService } from './services/account.service';
 import { MongooseModule } from '@nestjs/mongoose';
+
+import { CustomerController } from './controllers/customer.controller';
+
+import { AccountService } from './services/account.service';
+import { CustomerService } from './services/customer.service';
+
 import { CustomerSchema } from './schemas/customer.schema';
 import { UserSchema } from './schemas/user.schema';
-import { CustomerService } from './services/customer.service';
+import { AddressService } from './services/address.service';
+import { PetService } from './services/pet.service';
+import { AddressController } from './controllers/address.controller';
+import { PetController } from './controllers/pet.controller';
 
 @Module({
     imports: [
@@ -21,10 +28,16 @@ import { CustomerService } from './services/customer.service';
             ]
         )
     ],
-    controllers: [CustomerController],
+    controllers: [
+        AddressController,
+        CustomerController,
+        PetController
+    ],
     providers:[
         AccountService,
-        CustomerService
+        AddressService,
+        CustomerService,
+        PetService
     ]
 })
 export class BackofficeModule {}

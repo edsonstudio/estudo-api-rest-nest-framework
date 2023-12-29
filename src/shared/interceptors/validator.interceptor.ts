@@ -1,6 +1,6 @@
 import { CallHandler, ExecutionContext, HttpException, HttpStatus, Injectable, NestInterceptor } from "@nestjs/common";
 import { Observable } from "rxjs";
-import { Contract } from "src/backoffice/contracts/contract";
+import { Contract } from "src/modules/backoffice/contracts/contract";
 import { ResultDto } from "../dtos/result.dto";
 
 @Injectable()
