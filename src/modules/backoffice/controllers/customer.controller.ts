@@ -4,6 +4,7 @@ import { ValidatorInterceptor } from "src/shared/interceptors/validator.intercep
 
 import { CreateCustomerContract } from "../contracts/customer/create-customer.contract";
 import { UpdateCustomerContract } from "../contracts/customer/update-curstomer.contract";
+import { CreateCreditCardContract } from "../contracts/customer/create-credit-card.contract";
 
 import { AccountService } from "../services/account.service";
 import { CustomerService } from "../services/customer.service";
@@ -15,6 +16,7 @@ import { UpdateCustomerDto } from "../dtos/customer/update-customer.dto";
 
 import { User } from "../models/user.model";
 import { Customer } from "../models/customer.model";
+import { CreditCard } from "../models/credit-card.model";
 
 @Controller('v1/customers')
 export class CustomerController {
@@ -82,5 +84,16 @@ export class CustomerController {
     @Delete(':document')
     delete(@Param('document') document: string) {
         return new ResultDto('Cliente removido com sucesso', true, null, null);
+    }
+
+    @Post(':document/credit-cards')
+    @UseInterceptors(new ValidatorInterceptor(new CreateCreditCardContract()))
+    async createCreditCard(@Param('document') document, @Body() model: CreditCard) {
+        try {
+            await this.customerService.saveOrUpdateCreditCard(document, model);
+            return new ResultDto('Cartão de crédito criado/atualizado com sucesso', true, model, null);
+        } catch (error) {
+            throw new HttpException(new ResultDto('Não foi possível criar/atualizar o cartão de crédito', false, null, error), HttpStatus.BAD_REQUEST);
+        }
     }
 }
