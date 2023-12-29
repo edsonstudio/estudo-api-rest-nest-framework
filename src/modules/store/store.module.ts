@@ -6,6 +6,7 @@ import { ProductController } from './controllers/product.controller';
 import { OrderItem } from './entities/order-item.entity';
 import { Order } from './entities/order.entity';
 import { OrderService } from './services/order.service';
+import { OrderItemService } from './services/order-item.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([ // Para resolver as injeções de dependencias no Repository do TypeOrm
@@ -18,6 +19,7 @@ import { OrderService } from './services/order.service';
     ],
     providers: [
         OrderService,
+        OrderItemService,
         ProductService
     ]
 })
