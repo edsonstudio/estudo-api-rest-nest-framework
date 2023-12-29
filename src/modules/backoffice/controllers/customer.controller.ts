@@ -1,13 +1,20 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, UseInterceptors } from "@nestjs/common";
-import { ResultDto } from "src/shared/dtos/result.dto";
+
 import { ValidatorInterceptor } from "src/shared/interceptors/validator.interceptor";
+
 import { CreateCustomerContract } from "../contracts/customer/create-customer.contract";
-import { CreateCustomerDto } from "../dtos/create-customer.dto";
+import { UpdateCustomerContract } from "../contracts/customer/update-curstomer.contract";
+
 import { AccountService } from "../services/account.service";
-import { User } from "../models/user.model";
 import { CustomerService } from "../services/customer.service";
-import { Customer } from "../models/customer.model";
+
+import { ResultDto } from "src/shared/dtos/result.dto";
 import { QueryDto } from "../dtos/query.dto";
+import { CreateCustomerDto } from "../dtos/customer/create-customer.dto";
+import { UpdateCustomerDto } from "../dtos/customer/update-customer.dto";
+
+import { User } from "../models/user.model";
+import { Customer } from "../models/customer.model";
 
 @Controller('v1/customers')
 export class CustomerController {
@@ -62,8 +69,14 @@ export class CustomerController {
     }
 
     @Put(':document')
-    put(@Param('document') document: string, @Body() body: any) {
-        return new ResultDto('Cliente alterado com sucesso', true, body, null);
+    @UseInterceptors(new ValidatorInterceptor(new UpdateCustomerContract))
+    async put(@Param('document') document: string, @Body() model: UpdateCustomerDto) {
+        try {
+            await this.customerService.update(document, model);
+            return new ResultDto('Cliente atualizado com sucesso', true, model, null);
+        } catch (error) {
+            throw new HttpException(new ResultDto('Não foi possível atualizar o cliente', false, null, error), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Delete(':document')
