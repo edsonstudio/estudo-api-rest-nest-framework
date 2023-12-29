@@ -5,6 +5,7 @@ import { ValidatorInterceptor } from "src/shared/interceptors/validator.intercep
 import { CreateCustomerContract } from "../contracts/customer/create-customer.contract";
 import { UpdateCustomerContract } from "../contracts/customer/update-curstomer.contract";
 import { CreateCreditCardContract } from "../contracts/customer/create-credit-card.contract";
+import { QueryContract } from "../contracts/query.contract";
 
 import { AccountService } from "../services/account.service";
 import { CustomerService } from "../services/customer.service";
@@ -46,6 +47,7 @@ export class CustomerController {
     }
 
     @Post('query') // Validar se este é mesmo o unico modo de fazer um "GET" com parametros em uma DTO, pois no .NET existe outra forma.
+    @UseInterceptors(new ValidatorInterceptor(new QueryContract))
     async query(@Body() model: QueryDto) {
         try {
             const customers = await this.customerService.query(model);
