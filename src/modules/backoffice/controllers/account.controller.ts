@@ -1,4 +1,6 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Post, Req, UseGuards, UseInterceptors } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
+
 import { Guid } from "guid-typescript";
 
 import { AuthService } from "src/shared/services/auth.service";
@@ -13,14 +15,17 @@ import { AuthenticateDto } from "../dtos/account/authenticate.dto";
 import { ResetPasswordDto } from "../dtos/account/reset-password.dto";
 import { ChangePasswordDto } from "../dtos/account/change-password.dto";
 
+@ApiTags('Accounts') // Tag para agrupar endpoints
 @Controller('v1/accounts')
 export class AccountController {
     constructor(
         private authService: AuthService,
         private accountService: AccountService) { }
 
-    // Autenticar
+    // Autenticar - Com exemplo de Decorators do Swagger
     @Post('authenticate')
+    @ApiOperation({ summary: 'Autenticar o usuário', description: 'Autenticar o usuário no sistema e obter o Token' })
+    // @ApiBody({ type: AuthenticateDto }) // Substitua 'AuthenticateDto' com o nome do seu DTO
     async authenticate(@Body() model: AuthenticateDto): Promise<any> {
         const customer = await this.accountService.authenticate(model.username, model.password);
 

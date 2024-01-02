@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, 
 import { Md5 } from "md5-typescript";
 import { ConfigService } from '@nestjs/config';
 import { CacheInterceptor } from "@nestjs/cache-manager";
+import { ApiTags } from "@nestjs/swagger";
 
 import { ValidatorInterceptor } from "src/shared/interceptors/validator.interceptor";
 
@@ -22,6 +23,7 @@ import { User } from "../models/user.model";
 import { Customer } from "../models/customer.model";
 import { CreditCard } from "../models/credit-card.model";
 
+@ApiTags('Customers') // Tag para agrupar endpoints
 @Controller('v1/customers')
 export class CustomerController {
 

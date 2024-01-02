@@ -1,6 +1,10 @@
 export class AuthenticateDto {
-    constructor(
-        public username: string,
-        public password: string
-    ) { }
+    readonly username: string;
+    readonly password: string;
+
+    constructor(username: string, password: string) {
+        this.username = username;
+        this.password = password;
+    }
+
 }

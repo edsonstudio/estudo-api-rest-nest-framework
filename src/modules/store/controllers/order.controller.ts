@@ -1,4 +1,5 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Param, Post } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 
 import { OrderService } from "../services/order.service";
 import { OrderItemService } from "../services/order-item.service";
@@ -10,6 +11,7 @@ import { OrderItemDto } from "../dtos/order-item.dto";
 import { Order } from "../entities/order.entity";
 import { OrderItem } from "../entities/order-item.entity";
 
+@ApiTags('Orders') // Tag para agrupar endpoints
 @Controller('v1/orders')
 export class OrderController {
     constructor(

@@ -1,10 +1,12 @@
 import { Body, Controller, HttpException, HttpStatus, Param, Post, Put, UseInterceptors } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { ResultDto } from "src/shared/dtos/result.dto";
 import { ValidatorInterceptor } from "src/shared/interceptors/validator.interceptor";
 import { CreatePetContract } from "../contracts/pet/create-pet.contract";
 import { Pet } from "../models/pet.model";
 import { PetService } from "../services/pet.service";
 
+@ApiTags('Pets') // Tag para agrupar endpoints
 @Controller('v1/pets')
 export class PetController {
 

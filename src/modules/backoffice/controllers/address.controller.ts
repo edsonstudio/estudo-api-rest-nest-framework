@@ -1,11 +1,13 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, UseInterceptors } from "@nestjs/common";
-import { ResultDto } from "src/shared/dtos/result.dto";
+import { ApiTags } from "@nestjs/swagger";
 import { ValidatorInterceptor } from "src/shared/interceptors/validator.interceptor";
+import { ResultDto } from "src/shared/dtos/result.dto";
 import { Address } from "../models/address.model";
 import { CreateAddressContract } from "../contracts/address/create-address.contract";
 import { AddressService } from "../services/address.service";
 import { AddressType } from "../enums/address-type.enum";
 
+@ApiTags('Addresses') // Tag para agrupar endpoints
 @Controller('v1/addresses')
 export class AddressController {
 

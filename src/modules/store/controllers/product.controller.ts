@@ -1,10 +1,12 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 
 import { ProductService } from "../services/product.service";
 
 import { ResultDto } from "src/shared/dtos/result.dto";
 import { Product } from "../entities/product.entity";
 
+@ApiTags('Products') // Tag para agrupar endpoints
 @Controller('v1/products')
 export class ProductController {
     constructor(private readonly service: ProductService) { }
