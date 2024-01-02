@@ -1,4 +1,4 @@
-import { Body, Controller, HttpException, HttpStatus, Param, Post, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, UseInterceptors } from "@nestjs/common";
 import { ResultDto } from "src/shared/dtos/result.dto";
 import { ValidatorInterceptor } from "src/shared/interceptors/validator.interceptor";
 import { Address } from "../models/address.model";
@@ -10,6 +10,16 @@ import { AddressType } from "../enums/address-type.enum";
 export class AddressController {
 
     constructor(private readonly service: AddressService) { }
+
+    @Get('search/:zipcode')
+    async search(@Param('zipcode') zipcode: string) {
+        try {
+            const response = await this.service.getAddressByZipCode(zipcode).toPromise(); //Obs.: O metodo toPromise() está obsoleto nesta versão do Nest.JS
+            return new ResultDto(null, true, response.data, null);
+        } catch (error) {
+            throw new HttpException(new ResultDto('Não foi possível localizar o seu endereço', false, null, error), HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @Post(':document/billing')
     @UseInterceptors(new ValidatorInterceptor(new CreateAddressContract()))

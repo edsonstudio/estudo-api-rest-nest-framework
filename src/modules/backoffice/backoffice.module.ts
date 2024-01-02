@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { CacheModule } from '@nestjs/cache-manager';
+import { HttpModule } from '@nestjs/axios';
 
 import { ConfigService } from '@nestjs/config';
 
@@ -24,8 +25,9 @@ import { UserSchema } from './schemas/user.schema';
 
 @Module({
     imports: [
-        PassportModule.register({ defaultStrategy: 'jwt' }),
         CacheModule.register(),
+        HttpModule,
+        PassportModule.register({ defaultStrategy: 'jwt' }),
         // JwtModule.register({ // Versão sem o Nest Config
         //     secret: 'CHAVE-SECRETA-TEMPORARIA',
         //     // secretOrPrivateKey: 'CHAVE-SECRETA-TEMPORARIA', // Obsoleto, gera erros no console.
