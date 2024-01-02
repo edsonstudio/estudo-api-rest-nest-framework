@@ -11,6 +11,7 @@ import { RoleInterceptor } from "src/shared/interceptors/role.interceptor";
 import { ResultDto } from "src/shared/dtos/result.dto";
 import { AuthenticateDto } from "../dtos/account/authenticate.dto";
 import { ResetPasswordDto } from "../dtos/account/reset-password.dto";
+import { ChangePasswordDto } from "../dtos/account/change-password.dto";
 
 @Controller('v1/accounts')
 export class AccountController {
@@ -61,6 +62,18 @@ export class AccountController {
         }
     }
 
+    // Alterar a senha
+    @Post('change-password')
+    @UseGuards(JwtAuthGuard)
+    async changePassword(@Req() request, @Body() model: ChangePasswordDto): Promise<any> {
+        try {
+            // TODO: Encriptar a senha
+            await this.accountService.update(request.user.document, { password: model.newPassword }); // Atenção: Por segurança o document deve ser obtido da requisição.
+            return new ResultDto('Sua senha foi alterada com sucesso!', true, null, null);
+        } catch (error) {
+            throw new HttpException(new ResultDto('Não foi possível alterar a sua senha', false, null, error), HttpStatus.BAD_REQUEST);
+        }
+    }
 
     // Endpoints apenas para fins didaticos e testes
     // @Get('')
