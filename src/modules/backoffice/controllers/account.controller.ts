@@ -75,6 +75,16 @@ export class AccountController {
         }
     }
 
+    // Refresh Token
+    @Post('refresh')
+    @UseGuards(JwtAuthGuard)
+    async refreshToken(@Req() request): Promise<any> {
+        // Gera o token
+        // Boa prática: Ir ao banco fazendo o processo de 're-hidratação' para verificar se o usuário ainda é válido antes de definir um novo token para o memso;
+        const token = await this.authService.createToken(request.user.document, request.user.email, request.user.image, request.user.roles);
+        return new ResultDto(null, true, token, null);
+    }
+
     // Endpoints apenas para fins didaticos e testes
     // @Get('')
     // @UseGuards(JwtAuthGuard)
