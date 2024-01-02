@@ -11,11 +11,15 @@ export class AccountService {
     constructor(
         @InjectModel('User') private readonly userModel: Model<User>,
         @InjectModel('Customer') private readonly customerModel: Model<Customer>,
-        ) { }
+    ) { }
 
     async create(data: User): Promise<User> {
         const user = new this.userModel(data);
         return await user.save();
+    }
+
+    async update(username: string, data: any): Promise<any> {
+        return await this.userModel.findOneAndUpdate({ username }, data);
     }
 
     // Método apenas para fins didaticos e testes
