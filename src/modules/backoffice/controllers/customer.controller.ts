@@ -62,7 +62,7 @@ export class CustomerController {
     async post(@Body() model: CreateCustomerDto) {
 
         try {
-            const user = await this.accountService.create(new User(model.document, model.password, true));
+            const user = await this.accountService.create(new User(model.document, model.password, true, ['user']));
             const customer = await this.customerService.create(new Customer(model.name, model.document, model.email, [], null, null, null, user));
             return new ResultDto('Cliente criado com sucesso', true, customer, null);
         } catch (error) {

@@ -14,6 +14,6 @@ export class AccountService {
     }
 
     async findOneByUsername(username) {
-        return new User(username, '123456789', true);
+        return new User(username, '123456789', true, ['user']);
     }
 }
