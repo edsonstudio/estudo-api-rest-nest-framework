@@ -1,4 +1,6 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, UseInterceptors } from "@nestjs/common";
+import { Md5 } from "md5-typescript";
+import { ConfigService } from '@nestjs/config';
 
 import { ValidatorInterceptor } from "src/shared/interceptors/validator.interceptor";
 
@@ -24,7 +26,8 @@ export class CustomerController {
 
     constructor(
         private readonly accountService: AccountService,
-        private readonly customerService: CustomerService) { }
+        private readonly customerService: CustomerService,
+        private configService: ConfigService) { }
 
     @Get()
     async getAll() {
@@ -60,9 +63,9 @@ export class CustomerController {
     @Post()
     @UseInterceptors(new ValidatorInterceptor(new CreateCustomerContract()))
     async post(@Body() model: CreateCustomerDto) {
-
         try {
-            const user = await this.accountService.create(new User(model.document, model.password, true, ['user']));
+            const password = await Md5.init(`${model.password}${this.configService.get<string>('SALT_KEY')}`)
+            const user = await this.accountService.create(new User(model.document, password, true, ['user']));
             const customer = await this.customerService.create(new Customer(model.name, model.document, model.email, [], null, null, null, user));
             return new ResultDto('Cliente criado com sucesso', true, customer, null);
         } catch (error) {

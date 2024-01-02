@@ -3,6 +3,8 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 
+import { ConfigService } from '@nestjs/config';
+
 import { AccountController } from './controllers/account.controller';
 import { AddressController } from './controllers/address.controller';
 import { CustomerController } from './controllers/customer.controller';
@@ -18,7 +20,6 @@ import { JwtStrategy } from 'src/shared/strategies/jwt.strategy';
 
 import { CustomerSchema } from './schemas/customer.schema';
 import { UserSchema } from './schemas/user.schema';
-import { ConfigService } from '@nestjs/config';
 
 @Module({
     imports: [
