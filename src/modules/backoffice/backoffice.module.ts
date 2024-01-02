@@ -18,16 +18,28 @@ import { JwtStrategy } from 'src/shared/strategies/jwt.strategy';
 
 import { CustomerSchema } from './schemas/customer.schema';
 import { UserSchema } from './schemas/user.schema';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
     imports: [
-        PassportModule.register({defaultStrategy: 'jwt'}),
-        JwtModule.register({
-            secret: 'CHAVE-SECRETA-TEMPORARIA',
-            // secretOrPrivateKey: 'CHAVE-SECRETA-TEMPORARIA', // Obsoleto, gera erros no console.
-            signOptions: {
-                expiresIn: 3600
-            }
+        PassportModule.register({ defaultStrategy: 'jwt' }),
+        // JwtModule.register({ // Versão sem o Nest Config
+        //     secret: 'CHAVE-SECRETA-TEMPORARIA',
+        //     // secretOrPrivateKey: 'CHAVE-SECRETA-TEMPORARIA', // Obsoleto, gera erros no console.
+        //     signOptions: {
+        //         expiresIn: 3600
+        //     }
+        // }),
+        JwtModule.registerAsync({
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => {
+                return {
+                    secret: configService.get<string>('JWT_SECRET_KEY'),
+                    signOptions: {
+                        expiresIn: configService.get<number>('JWT_EXPIRATION_TIME'),
+                    },
+                };
+            },
         }),
         MongooseModule.forFeature(
             [
@@ -48,7 +60,7 @@ import { UserSchema } from './schemas/user.schema';
         CustomerController,
         PetController
     ],
-    providers:[
+    providers: [
         AuthService,
         AccountService,
         AddressService,
@@ -57,4 +69,4 @@ import { UserSchema } from './schemas/user.schema';
         PetService
     ]
 })
-export class BackofficeModule {}
+export class BackofficeModule { }
