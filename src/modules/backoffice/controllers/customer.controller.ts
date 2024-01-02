@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, UseInterceptors } from "@nestjs/common";
 import { Md5 } from "md5-typescript";
 import { ConfigService } from '@nestjs/config';
+import { CacheInterceptor } from "@nestjs/cache-manager";
 
 import { ValidatorInterceptor } from "src/shared/interceptors/validator.interceptor";
 
@@ -30,6 +31,7 @@ export class CustomerController {
         private configService: ConfigService) { }
 
     @Get()
+    @UseInterceptors(CacheInterceptor)// Atenção: Analisar a viabilidade do uso do cache na aplicação, pois endpoints que possuem dados que são alterados constantemente podem ficar desatualizados ao usar o cache.
     async getAll() {
         try {
             const customers = await this.customerService.findAll();
