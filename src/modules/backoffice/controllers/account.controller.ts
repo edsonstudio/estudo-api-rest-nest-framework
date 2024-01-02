@@ -1,4 +1,5 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Post, Req, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Guid } from "guid-typescript";
 
 import { AuthService } from "src/shared/services/auth.service";
 import { AccountService } from "../services/account.service";
@@ -9,6 +10,7 @@ import { RoleInterceptor } from "src/shared/interceptors/role.interceptor";
 
 import { ResultDto } from "src/shared/dtos/result.dto";
 import { AuthenticateDto } from "../dtos/account/authenticate.dto";
+import { ResetPasswordDto } from "../dtos/account/reset-password.dto";
 
 @Controller('v1/accounts')
 export class AccountController {
@@ -22,12 +24,12 @@ export class AccountController {
         const customer = await this.accountService.authenticate(model.username, model.password);
 
         // Caso não encontre o usuário
-        if(!customer) {
+        if (!customer) {
             throw new HttpException(new ResultDto('Usuário e/ou senha inválidos', false, null, null), HttpStatus.UNAUTHORIZED);
         }
 
         // Caso o usuário não esteja ativo
-        if(!customer.user.active) {
+        if (!customer.user.active) {
             throw new HttpException(new ResultDto('Usuário inativo', false, null, null), HttpStatus.UNAUTHORIZED);
         }
 
@@ -43,6 +45,20 @@ export class AccountController {
         //     email: customer.email,
         //     token: token
         // }, null);
+    }
+
+    // Resetar a senha
+    @Post('reset-password')
+    async resetPassword(@Body() model: ResetPasswordDto): Promise<any> {
+        try {
+            // TODO: Criar funcionalidade para enviar um e-mail com a senha temporaria
+
+            const password = Guid.create().toString().substring(0, 8);
+            await this.accountService.update(model.document, { password: password });
+            return new ResultDto('Uma nova senha foi enviada para o seu e-mail', true, null, null);
+        } catch (error) {
+            throw new HttpException(new ResultDto('Não foi possível resetar sua senha', false, null, error), HttpStatus.BAD_REQUEST);
+        }
     }
 
 
