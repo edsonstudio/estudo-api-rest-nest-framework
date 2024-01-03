@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { AgendaModule } from './modules/agenda/agenda.module';
 import { BackofficeModule } from './modules/backoffice/backoffice.module';
 import { StoreModule } from './modules/store/store.module';
 
@@ -42,6 +43,7 @@ import { StoreModule } from './modules/store/store.module';
         synchronize: true,
       }),
     }),
+    AgendaModule,
     BackofficeModule,
     StoreModule
   ],

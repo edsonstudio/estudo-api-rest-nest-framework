@@ -20,7 +20,6 @@ async function bootstrap() {
     .setTitle('Petshop API')
     .setDescription('API desenvolvida durante o Curso Criando APIs com Nest Framework(v10)')
     .setVersion('1.0.0')
-    // .addTag('petshop')
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('docs', app, document);
